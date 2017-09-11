@@ -1,0 +1,12 @@
+#ignore credentials
+imagesite/Credentials
+
+#ignoring .pyc files
+*.pyc
+
+#ignore collected static files
+imagesite/static/admin/*
+
+manage.py
+
+media/*

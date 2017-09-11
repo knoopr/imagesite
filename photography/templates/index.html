@@ -1,0 +1,187 @@
+{% extends 'base.html' %} {% block content %}
+<div class="overview">
+    <div class="cropped-image">
+        <picture>
+            <source srcet="/media/test.webp" type="image/webp">-->
+            <img src="/media/Photography_header.jpg" alt="Ontario lakes are gorgeous!">
+        </picture>
+    </div>
+    <div class="container">
+        <div class="columns search-criteria">
+            <div class="column col-7 col-xl-6 col-lg-12">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-2 col-sm-3">
+                            <label class="form-label" for="input-tags">Search tags: </label>
+                        </div>
+                        <div class="col-10 col-sm-9">
+                            <div class="form-autocomplete">
+                                <!-- autocomplete input container -->
+                                <div class="form-autocomplete-input form-input">
+                                    <!-- autocomplete chips -->
+                                    <div id="chip-list">
+                                        <label class="chip bg-primary text-light" style="display:none;" id="cloneable-chip">
+                        <a class="btn btn-clear" aria-label="Close" role="button" onclick="deleteChip(this)"></a>
+                      </label>
+                                    </div>
+                                    <!-- autocomplete real input box -->
+                                    <input class="form-input" id="input-tags" type="text" placeholder="Input search tags" oninput="return tagsListener(this, event)"
+                                        onkeydown="return tagsListener(this, event)" />
+                                </div>
+                                <!-- autocomplete suggestion list
+                    <ul class="menu">
+                      <li class="menu-item">
+                        <a href="#">
+                          <div class="tile tile-centered">
+                            <div class="tile-icon">
+                              <img src="img/avatar-4.png" class="avatar avatar-sm" alt="Steve Rogers" />
+                            </div>
+                            <div class="tile-content">
+                              Steve Rogers
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                    </ul>-->
+
+                            </div>
+                        </div>
+                        <!-- form structure -->
+                </form>
+
+                </div>
+            </div>
+            <div class="column col-5 col-xl-6 col-lg-12 search-buttons">
+                <form class="form-horizontal">
+                    <div class="form-group form-full">
+                        <div class="dropdown col-3 col-xl-4">
+                            <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
+                                Photographer <i class="icon icon-caret"></i>
+                            </button>
+                            <ul class="menu">
+                                <li class="menu-item">test</li>
+                                <li class="menu-item">test2</li>
+                            </ul>
+                        </div>
+                        <div class="image-quality col-6 col-sm-4 col-xs-4">
+                            <div class="btn-group">
+                                <button type="button" class="btn">Low</button>
+                                <button type="button" class="btn">Medium</button>
+                                <button type="button" class="btn active">High</button>
+                            </div>
+                        </div>
+                        <div class="col-3 col-xl-4">
+                            <button type="button" class="btn btn-primary" tabindex="0" style="float:right;" onclick="showUploadModal()">Upload</button>
+                        </div>
+
+                    </div>
+                    <div class="form-group form-partial">
+                        <div class="btn-group" style="width:100%">
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
+                                    Photographer <i class="icon icon-caret"></i>
+                                </button>
+                                <ul class="menu">
+                                    <li class="menu-item">test</li>
+                                    <li class="menu-item">test2</li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
+                                        Image Quality <i class="icon icon-caret"></i>
+                                    </button>
+                                <ul class="menu">
+                                    <li class="menu-item">Low</li>
+                                    <li class="menu-item">Medium</li>
+                                    <li class="menu-item">High</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-primary" onclick="showUploadModal()">Upload</button>
+                            </div>
+                        </div>
+                </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="grid">
+            <div class="grid-item grid-item--width2">
+                {% include "photo_card.html" with img_src="test.jpg" %}
+            </div>
+            <div class="grid-item grid-item--height2">
+                {% include "photo_card.html" %}
+            </div>
+
+            {% for number in test_range %}
+            <div class="grid-item"> {{number}}</div>
+            {% endfor %}
+            <!--<div class="grid-item">3</div>
+        <div class="grid-item grid-item--width3">4</div>
+        <div class="grid-item grid-item--width2 grid-item--height2">5</div>
+        <div class="grid-item grid-item--width2">6</div>
+        <div class="grid-item grid-item--width2">7</div>
+        <div class="grid-item grid-item--height2">8</div>
+        <div class="grid-item">9</div>
+        <div class="grid-item grid-item--width3">10</div>
+        <div class="grid-item grid-item--height2">11</div>
+        <div class="grid-item">12</div>
+        <div class="grid-item">13</div>
+        <div class="grid-item grid-item--width3">14</div>
+        <div class="grid-item grid-item--height2">15</div>
+        <div class="grid-item">16</div>
+        <div class="grid-item">17</div>
+        <div class="grid-item grid-item--width3 grid-item--height2">18</div>
+        <div class="grid-item grid-item--width3">19</div>
+        <div class="grid-item grid-item--width2">20</div>
+        <div class="grid-item grid-item--height2">21</div>
+        <div class="grid-item">22</div>
+        <div class="grid-item grid-item--width2">23</div>
+        <div class="grid-item grid-item--height2">24</div>
+        <div class="grid-item">25</div>
+        <div class="grid-item grid-item--width3">26</div>-->
+
+        </div>
+    </div>
+    <div class="modal" id="display-modal">
+        
+        <div class="modal-overlay" onclick="hideModal('display-modal')"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <button class="btn btn-clear float-right" onclick="hideModal('display-modal')"></button>
+                <div class="modal-title h5">Modal title</div>
+            </div>
+            <div class="modal-body">
+                <div class="content">
+                    <!-- content here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                ...
+            </div>
+        </div>
+    </div>
+    {% include "upload_modal.html" %} {% endblock %} {% block javascript %}
+    <!--<script src="/static/masonry.pkgd.min.js"></script>-->
+    {% csrf_token %}
+    <script type="text/javascript" src="/static/packery.pkgd.min.js"></script>
+    <script type="text/javascript" src="/static/search.tags.js"></script>
+    <script type="text/javascript" src="/static/upload.modal.js"></script>
+    <script type="text/javascript">
+        function hideModal(modalName) {
+            var elem = document.getElementById(modalName);
+            elem.classList.remove('active');
+        }
+
+        function showImageModal(parent) {
+            var elem = document.getElementById('display-modal');
+            elem.classList.add('active');
+            /*var elem = document.getElementsByClassName('modal-title')[0];
+            elem.innerText = parent.innerText;
+            parent.innerText = "test";*/
+        }
+    </script>
+    <script defer type="text/javascript" src="/static/packery.exec.js"></script>
+    {% endblock %}

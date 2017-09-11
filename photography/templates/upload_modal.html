@@ -1,0 +1,36 @@
+<div class="modal" id="upload-modal">
+    <div class="modal-overlay" onclick="hideModal('upload-modal')"></div>
+    <div class="modal-container" style="width:60%;">
+        <div class="modal-header">
+            <button class="btn btn-clear float-right" onclick="hideModal('upload-modal')"></button>
+            <div class="modal-title h5">Image Upload</div>
+        </div>
+        <div class="modal-body">
+            <div class="content">
+                <div class="upload-window">
+                    <div id="upload-preview"></div>
+                    <input class="upload-option" id="upload-choose" type="file" name="files[]" id="file" accept="image/*" data-multiple-caption="{count} files selected"
+                        multiple />
+                    <label for="upload-choose"><strong>Choose a file</strong><span class="upload-option"  id="upload-drag"> or drag it here</span>.</label>
+                    <button class="upload-option" id="upload-button" type="submit">Upload</button>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            {% csrf_token %}
+            <button type="button" class="btn btn-primary upload-option" onclick="uploadImages()">Upload</button>
+            <button type="button" class="btn btn-primary upload-option" onclick="clearUploads()" >Clear</button>
+            <div class="toast toast-error upload-option" id="upload-error">
+                <button class="btn btn-clear float-right"></button> There was an error uploading the images, please try again
+                later.
+            </div>
+            <div class="toast upload-option" id="upload-info">
+                <button class="btn btn-clear float-right"></button> Images are in the process of uploading.
+            </div>
+            <div class="toast toast-success upload-option" id="upload-complete">
+                <button class="btn btn-clear float-right"></button> All images were uploaded successfully!
+            </div>
+        </div>
+    </div>
+</div>

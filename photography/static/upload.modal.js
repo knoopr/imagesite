@@ -1,5 +1,5 @@
 var modal = document.getElementById('upload-modal');
-var stored_files = [];
+var stored_files = {};
 var preview_pane = document.getElementById('upload-preview');
 
 
@@ -22,7 +22,6 @@ function clearUploads() {
 }
 
 function uploadImages() {
-    console.log("TEST");
     var preview_images = preview_pane.getElementsByTagName('img')
     for (i = 0; i < preview_images.length; i++) {
         preview_images[i].style.opacity = '0.4';
@@ -56,8 +55,43 @@ function uploadImages() {
             }
         }
     };
-    xhr.send(JSON.stringify({ 'Images': stored_files }));
+    xhr.send(JSON.stringify(stored_files ));
     console.log(stored_files);
+}
+
+function imageClick(evt){
+    if (evt.target.nodeName == "DIV")
+        var elem = evt.target
+    else
+        var elem = evt.target.parentElement.parentElement
+
+    if (elem.classList.contains('loading')){
+       return;
+    }
+
+    if (elem.classList.contains('selected-image')){
+        elem.classList.remove("selected-image")
+        changeMetadata(elem.getElementsByTagName('img')[0])
+        if (document.getElementsByClassName('selected-image').length == 0){
+            document.getElementById('metadata-window').classList.add('upload-option');
+            document.getElementById('input-first').value = ""
+            document.getElementById('input-last').value = ""
+            document.getElementById('input-email').value = ""
+            document.getElementById('input-tags').value = ""
+
+        }
+    }
+    
+    else{
+        elem.classList.add("selected-image")
+        if (document.getElementsByClassName('selected-image').length == 1){
+            var filename = elem.getElementsByTagName('img')[0].getAttribute('filename')
+            document.getElementById('input-first').value = stored_files[filename]['photographer']['first']
+            document.getElementById('input-last').value = stored_files[filename]['photographer']['last']
+            document.getElementById('input-email').value = stored_files[filename]['photographer']['email']
+        }
+        document.getElementById('metadata-window').classList.remove('upload-option');
+    }
 }
 
 function readFile(file) {
@@ -67,12 +101,14 @@ function readFile(file) {
         //console.log(reader.result);
         modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[0].classList.remove('upload-option')
         modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[1].classList.remove('upload-option')
-
+        
         var wrapper_border = document.createElement('div')
         var loading_wrapper = document.createElement('div')
 
         var new_preview = document.createElement('img')
         new_preview.setAttribute('src', reader.result);
+        new_preview.setAttribute('filename', reader.fileName);
+        wrapper_border.addEventListener('click',imageClick);
         new_preview.classList.add('preview-image');
 
         loading_wrapper.appendChild(new_preview);
@@ -82,22 +118,37 @@ function readFile(file) {
 
         preview_pane.appendChild(wrapper_border);
 
-        stored_files.push(reader.result)
+        stored_files[reader.fileName]={'image':reader.result,'photographer':{'first':null,'last':null,'email':null},'tags':[]};
     }, false);
 
+    reader.fileName = file.name;
     reader.readAsDataURL(file);
 }
 
 function handleFileSelect(evt) {
+    document.getElementById('upload-complete').classList.add('upload-option')
+    document.getElementById('upload-complete').classList.add('upload-error')
+    document.getElementById('upload-complete').classList.add('upload-info')
+    document.getElementById('upload-error-type').classList.add('upload-option')
+    
     evt.stopPropagation();
     evt.preventDefault();
-    var files = evt.dataTransfer.files
+    try{
+        var files = evt.dataTransfer.files
+    }catch (e){
+        var files = document.getElementById('upload-choose').files
+    }
+
     for (i = 0; i < files.length; i++) {
-        readFile(files[i]);
+        
+        if (files[i].type.match(/image\/*/))
+            readFile(files[i]);
+        else
+            document.getElementById('upload-error-type').classList.remove('upload-option')    
     }
 }
 
-var dragover = modal.getElementsByClassName('upload-window')[0];
+var dragover = document.getElementById('upload-window');
 
 dragover.addEventListener("dragover", function () {
     this.classList.add('is-dragover');
@@ -112,6 +163,8 @@ dragover.addEventListener("dragend", function () {
     this.classList.remove('is-dragover');
 });
 dragover.addEventListener("drop", handleFileSelect, true);
+document.getElementById('upload-choose').addEventListener('change', handleFileSelect, true);
+
 
 
 window.addEventListener("dragover", function (e) {
@@ -122,3 +175,15 @@ window.addEventListener("drop", function (e) {
     e = e || event;
     e.preventDefault();
 }, false);
+
+function hideToast(toast) {
+    toast.parentElement.classList.add("upload-option");
+}
+
+function changeMetadata(photograph){
+    var filename = photograph.getAttribute('filename')
+    stored_files[filename]['photographer']['first'] = document.getElementById('input-first').value
+    stored_files[filename]['photographer']['last'] = document.getElementById('input-last').value
+    stored_files[filename]['photographer']['email'] = document.getElementById('input-email').value
+    console.log(stored_files)
+}

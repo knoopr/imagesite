@@ -1,35 +1,98 @@
 <div class="modal" id="upload-modal">
     <div class="modal-overlay" onclick="hideModal('upload-modal')"></div>
-    <div class="modal-container" style="width:60%;">
+    <div class="modal-container">
         <div class="modal-header">
             <button class="btn btn-clear float-right" onclick="hideModal('upload-modal')"></button>
             <div class="modal-title h5">Image Upload</div>
         </div>
         <div class="modal-body">
             <div class="content">
-                <div class="upload-window">
+                <div class="toast">
+                    <button class="btn btn-clear float-right" onclick="hideToast(this)"></button> To change metadata simply click on the image preview. Any images selected will have their affected metadata changed.
+                </div>
+                <div id="upload-window">
                     <div id="upload-preview"></div>
                     <input class="upload-option" id="upload-choose" type="file" name="files[]" id="file" accept="image/*" data-multiple-caption="{count} files selected"
                         multiple />
-                    <label for="upload-choose"><strong>Choose a file</strong><span class="upload-option"  id="upload-drag"> or drag it here</span>.</label>
+                    <label for="upload-choose"><strong>Choose files</strong><span class="upload-option"  id="upload-drag"> or drag them here</span>.</label>
                     <button class="upload-option" id="upload-button" type="submit">Upload</button>
                 </div>
+                <form id="metadata-window" class="form-horizontal upload-option">
+                    <div class="form-group">
+                        <div class="col-1 col-md-2">
+                            <label class="form-label" for="input-tags">Tags: </label>
+                        </div>
+                        <div class="col-11 col-md-10">
+                            <div class="form-autocomplete">
+                                <!-- autocomplete input container -->
+                                <div class="form-autocomplete-input form-input">
+                                    <!-- autocomplete chips -->
+                                    <div class="chip-list">
+                                        <label class="chip bg-primary text-light" style="display:none;" id="cloneable-chip">
+                                            <a class="btn btn-clear" aria-label="Close" role="button" onclick="deleteChip(this)"></a>
+                                        </label>
+                                    </div>
+                                    <!-- autocomplete real input box -->
+                                    <input class="form-input" id="input-tags" type="text" placeholder="Input search tags" oninput="return tagsListener(this, event)"
+                                        onkeydown="return tagsListener(this, event)" />
+                                </div>
+                                <!-- autocomplete suggestion list
+                            <ul class="menu">
+                              <li class="menu-item">
+                                <a href="#">
+                                  <div class="tile tile-centered">
+                                    <div class="tile-icon">
+                                      <img src="img/avatar-4.png" class="avatar avatar-sm" alt="Steve Rogers" />
+                                    </div>
+                                    <div class="tile-content">
+                                      Steve Rogers
+                                    </div>
+                                  </div>
+                                </a>
+                              </li>
+                            </ul>-->
 
+                            </div>
+                        </div>
+                        <!-- form structure -->
+                    </div>
+                    <div class="form-group">
+                        <div class="col-3">
+                            <label class="form-label" for="input-first">First Name: </label>
+                            <input class="form-input" id="input-first" type="text" placeholder="Photographer First" />
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-3">
+                            <label class="form-label" for="input-last">Last Name: </label>
+                            <input class="form-input" id="input-last" type="text" placeholder="Photgrapher Last" />
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-4">
+                            <label class="form-label" for="input-email">Email Address: </label>
+                            <input class="form-input" id="input-email" type="text" placeholder="Photographer Email" />
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="modal-footer">
             {% csrf_token %}
             <button type="button" class="btn btn-primary upload-option" onclick="uploadImages()">Upload</button>
-            <button type="button" class="btn btn-primary upload-option" onclick="clearUploads()" >Clear</button>
+            <button type="button" class="btn btn-primary upload-option" onclick="clearUploads()">Clear</button>
             <div class="toast toast-error upload-option" id="upload-error">
-                <button class="btn btn-clear float-right"></button> There was an error uploading the images, please try again
-                later.
+                <button class="btn btn-clear float-right" onclick="hideToast(this)"></button> There was an error uploading
+                the images, please try again later.
+            </div>
+            <div class="toast toast-error upload-option" id="upload-error-type">
+                <button class="btn btn-clear float-right" onclick="hideToast(this)"></button> One of the files you selected
+                to upload was not an image.
             </div>
             <div class="toast upload-option" id="upload-info">
-                <button class="btn btn-clear float-right"></button> Images are in the process of uploading.
+                <button class="btn btn-clear float-right" onclick="hideToast(this)"></button> Images are in the process of
+                uploading.
             </div>
             <div class="toast toast-success upload-option" id="upload-complete">
-                <button class="btn btn-clear float-right"></button> All images were uploaded successfully!
+                <button class="btn btn-clear float-right" onclick="hideToast(this)"></button> All images were uploaded successfully!
             </div>
         </div>
     </div>

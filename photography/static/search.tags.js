@@ -14,7 +14,7 @@ function tagsListener(tags_field, event) {
             var entered_text = tags_field.value.trim();
             tags_field.value = "";
             if (entered_text != "")
-                addChip(entered_text)
+                addChip(tags_field, entered_text)
             return false;
 
         }
@@ -25,21 +25,22 @@ function tagsListener(tags_field, event) {
             var entered_text = tags_field.value.trim().slice(0, -1);
             tags_field.value = "";
             if (entered_text != "")
-                addChip(entered_text)
+                addChip(tags_field, entered_text)
             return false;
 
         }
     }
 }
 
-function addChip(chip_text) {
+function addChip(tags_field, chip_text) {
     var cloneable_chip = document.getElementById('cloneable-chip');
     var cloned_chip = cloneable_chip.cloneNode(true)
 
     cloned_chip.removeAttribute('style');
     cloned_chip.removeAttribute('id');
     cloned_chip.childNodes[0].nodeValue = chip_text;
-    var chip_list = document.getElementById('chip-list');
+    var chip_list = tags_field.parentNode.getElementsByClassName('chip-list')[0]
+    //var chip_list = document.getElementById('chip-list');
     chip_list.append(cloned_chip);
 
 }

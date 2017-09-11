@@ -12,20 +12,20 @@
                 <form class="form-horizontal">
                     <div class="form-group">
                         <div class="col-2 col-sm-3">
-                            <label class="form-label" for="input-tags">Search tags: </label>
+                            <label class="form-label" for="search-tags">Search tags: </label>
                         </div>
                         <div class="col-10 col-sm-9">
                             <div class="form-autocomplete">
                                 <!-- autocomplete input container -->
                                 <div class="form-autocomplete-input form-input">
                                     <!-- autocomplete chips -->
-                                    <div id="chip-list">
+                                    <div class="chip-list">
                                         <label class="chip bg-primary text-light" style="display:none;" id="cloneable-chip">
-                        <a class="btn btn-clear" aria-label="Close" role="button" onclick="deleteChip(this)"></a>
-                      </label>
+                                        <a class="btn btn-clear" aria-label="Close" role="button" onclick="deleteChip(this)"></a>
+                                    </label>
                                     </div>
                                     <!-- autocomplete real input box -->
-                                    <input class="form-input" id="input-tags" type="text" placeholder="Input search tags" oninput="return tagsListener(this, event)"
+                                    <input class="form-input" id="search-tags" type="text" placeholder="Input search tags" oninput="return tagsListener(this, event)"
                                         onkeydown="return tagsListener(this, event)" />
                                 </div>
                                 <!-- autocomplete suggestion list

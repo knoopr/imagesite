@@ -19,9 +19,20 @@ function clearUploads() {
     preview_pane.innerHTML = "";
     modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[0].classList.add('upload-option')
     modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[1].classList.add('upload-option')
+    
     var toasts = modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('toast')
-    for (i = 0; i < toasts.length; i++){
+    for (i = 0; i < toasts.length; i++) {
         toasts[i].classList.add('upload-option')
+    }
+
+    document.getElementById('metadata-window').classList.add('upload-option');
+    document.getElementById('input-first').value = ""
+    document.getElementById('input-last').value = ""
+    document.getElementById('input-email').value = ""
+    document.getElementById('input-tags').value = ""
+    var chips = modal.getElementsByClassName('chip')
+    while(chips.length>1) {
+        chips[1].parentElement.removeChild(chips[1]);
     }
 }
 
@@ -40,7 +51,6 @@ function sendRequest(photo) {
                 document.getElementById('upload-info').classList.add('upload-option')
                 document.getElementById('upload-complete').classList.remove('upload-option')
 
-                console.log(response['filename']);
                 var imgdiv = preview_pane.querySelector('[filename="' + response['filename'] + '"]')
 
                 var success_icon = document.createElement('i');
@@ -50,15 +60,13 @@ function sendRequest(photo) {
                 imgdiv.parentElement.classList.remove('loading', 'loading-lg');
 
                 delete stored_files[response['filename']];
-                console.log(stored_files);
-                //preview_pane.innerHTML = "";
 
             } else {
                 document.getElementById('upload-info').classList.add('upload-option')
                 document.getElementById('upload-error').classList.remove('upload-option')
-                
+
                 var imgdiv = preview_pane.querySelector('[filename="' + photo + '"]')
-                
+
                 var error_icon = document.createElement('i');
                 error_icon.classList.add('icon', 'icon-cross', 'bg-error', 'text-dark');
 
@@ -73,8 +81,14 @@ function sendRequest(photo) {
 function uploadImages() {
     var preview_images = preview_pane.getElementsByTagName('img')
     for (i = 0; i < preview_images.length; i++) {
-        preview_images[i].parentElement.classList.add('loading');
-        preview_images[i].parentElement.classList.add('loading-lg');
+        if (preview_images[i].parentElement.getElementsByClassName("icon").length == 0) {
+            preview_images[i].parentElement.classList.add('loading');
+            preview_images[i].parentElement.classList.add('loading-lg');
+            if (preview_images[i].parentElement.parentElement.classList.contains('selected-image')) {
+                preview_images[i].parentElement.parentElement.classList.remove('selected-image')
+                changeMetadata(preview_images[i])
+            }
+        }
     }
     //preview_pane.innerHTML = "";
     document.getElementById('upload-info').classList.remove('upload-option')
@@ -91,9 +105,11 @@ function uploadImages() {
 }
 
 function imageClick(evt) {
-    if (evt.target.nodeName == "DIV")
+    if (evt.target.nodeName == "DIV") {
         var elem = evt.target
-    else
+        if (!elem.classList.contains("preview-wrapper"))
+            elem = elem.parentElement;
+    } else
         var elem = evt.target.parentElement.parentElement
 
     if (elem.classList.contains('loading') || elem.getElementsByClassName('loading').length != 0 || elem.getElementsByTagName('i').length != 0) {
@@ -109,7 +125,10 @@ function imageClick(evt) {
             document.getElementById('input-last').value = ""
             document.getElementById('input-email').value = ""
             document.getElementById('input-tags').value = ""
-
+            chips = modal.getElementsByClassName('chip')
+            while(chips.length > 1) {
+                chips[1].parentElement.removeChild(chips[1]);
+            }
         }
     }
 
@@ -120,6 +139,10 @@ function imageClick(evt) {
             document.getElementById('input-first').value = stored_files[filename]['photographer']['first']
             document.getElementById('input-last').value = stored_files[filename]['photographer']['last']
             document.getElementById('input-email').value = stored_files[filename]['photographer']['email']
+            var tags_field = document.getElementById('input-tags')
+            for (var i = 0; i < stored_files[filename]['tags'].length;i++)
+            addChip(tags_field, stored_files[filename]['tags'][i])
+            
         }
         document.getElementById('metadata-window').classList.remove('upload-option');
     }
@@ -151,7 +174,17 @@ function readFile(file) {
         stored_files[reader.fileName] = { 'image': reader.result, 'photographer': { 'first': null, 'last': null, 'email': null }, 'tags': [] };
     }, false);
 
-    reader.fileName = file.name;
+    if (preview_pane.querySelectorAll('[filename="' + file.name + '"]').length == 0){
+        reader.fileName = file.name;
+    }
+    else{
+        console.log(preview_pane.querySelectorAll('[filename="' + file.name + '"]').length)
+        var i = 1;
+        do
+            i++
+        while(preview_pane.querySelectorAll('[filename="' + i + '-' + file.name + '"]').length != 0);
+            reader.fileName = i +'-' + file.name;
+    }
     reader.readAsDataURL(file);
 }
 
@@ -215,4 +248,9 @@ function changeMetadata(photograph) {
     stored_files[filename]['photographer']['first'] = document.getElementById('input-first').value
     stored_files[filename]['photographer']['last'] = document.getElementById('input-last').value
     stored_files[filename]['photographer']['email'] = document.getElementById('input-email').value
+    stored_files[filename]['tags'] = []
+    var chips = modal.getElementsByClassName('chip')
+    for (i = 1; i < chips.length; i++) {
+        stored_files[filename]['tags'].push(chips[i].childNodes[0].nodeValue)
+    }
 }

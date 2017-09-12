@@ -20,6 +20,8 @@ function tagsListener(tags_field, event) {
         }
     }
     else {
+        if (event.data == null)
+            return;
         var key = event.data.charCodeAt(0)
         if (key == 44) {
             var entered_text = tags_field.value.trim().slice(0, -1);
@@ -27,6 +29,7 @@ function tagsListener(tags_field, event) {
             if (entered_text != "")
                 addChip(tags_field, entered_text)
             return false;
+
 
         }
     }

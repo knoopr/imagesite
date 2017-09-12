@@ -20,9 +20,9 @@ def index(request):
         upload_name = json_data['filename']
         upload_image = json_data['data']['image']
         upload_photographer = json_data['data']['photographer']
-        upload_tags = json_data['data']['image']
+        upload_tags = json_data['data']['tags']
 
-        print(upload_photographer)
+        print(upload_tags)
         return JsonResponse({'success':1, 'filename':upload_name});
         
 

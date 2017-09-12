@@ -19,20 +19,13 @@ function clearUploads() {
     preview_pane.innerHTML = "";
     modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[0].classList.add('upload-option')
     modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[1].classList.add('upload-option')
+    var toasts = modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('toast')
+    for (i = 0; i < toasts.length; i++){
+        toasts[i].classList.add('upload-option')
+    }
 }
 
-function uploadImages() {
-    var preview_images = preview_pane.getElementsByTagName('img')
-    for (i = 0; i < preview_images.length; i++) {
-        preview_images[i].style.opacity = '0.4';
-        preview_images[i].parentElement.classList.add('loading');
-        preview_images[i].parentElement.classList.add('loading-lg');
-    }
-    //preview_pane.innerHTML = "";
-    document.getElementById('upload-info').classList.remove('upload-option')
-    modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[0].classList.add('upload-option')
-    modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[1].classList.add('upload-option')
-
+function sendRequest(photo) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '.');
     xhr.setRequestHeader("CONTENT-TYPE", "application/javascript");
@@ -42,37 +35,75 @@ function uploadImages() {
         var OK = 200; // status 200 is a successful return.
         if (xhr.readyState === DONE) {
             if (xhr.status === OK) {
-                console.log(xhr.responseText); // 'This is the returned text.'
+                response = JSON.parse(xhr.responseText)
 
                 document.getElementById('upload-info').classList.add('upload-option')
                 document.getElementById('upload-complete').classList.remove('upload-option')
 
-                stored_files = [];
-                preview_pane.innerHTML = "";
+                console.log(response['filename']);
+                var imgdiv = preview_pane.querySelector('[filename="' + response['filename'] + '"]')
+
+                var success_icon = document.createElement('i');
+                success_icon.classList.add('icon', 'icon-check', 'bg-success', 'text-dark');
+
+                imgdiv.parentElement.appendChild(success_icon);
+                imgdiv.parentElement.classList.remove('loading', 'loading-lg');
+
+                delete stored_files[response['filename']];
+                console.log(stored_files);
+                //preview_pane.innerHTML = "";
 
             } else {
-                console.log('Error: ' + xhr.status); // An error occurred during the request.
+                document.getElementById('upload-info').classList.add('upload-option')
+                document.getElementById('upload-error').classList.remove('upload-option')
+                
+                var imgdiv = preview_pane.querySelector('[filename="' + photo + '"]')
+                
+                var error_icon = document.createElement('i');
+                error_icon.classList.add('icon', 'icon-cross', 'bg-error', 'text-dark');
+
+                imgdiv.parentElement.appendChild(error_icon);
+                imgdiv.parentElement.classList.remove('loading', 'loading-lg');
             }
         }
     };
-    xhr.send(JSON.stringify(stored_files ));
-    console.log(stored_files);
+    xhr.send(JSON.stringify({ "filename": photo, "data": stored_files[photo] }));
 }
 
-function imageClick(evt){
+function uploadImages() {
+    var preview_images = preview_pane.getElementsByTagName('img')
+    for (i = 0; i < preview_images.length; i++) {
+        preview_images[i].parentElement.classList.add('loading');
+        preview_images[i].parentElement.classList.add('loading-lg');
+    }
+    //preview_pane.innerHTML = "";
+    document.getElementById('upload-info').classList.remove('upload-option')
+    modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[0].classList.add('upload-option')
+    //modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[1].classList.add('upload-option')
+
+
+
+
+    //send each photo as individual request so if one fails it can be handled individually, additionally maximum size requirements per request
+    for (var photo in stored_files) {
+        sendRequest(photo)
+    }
+}
+
+function imageClick(evt) {
     if (evt.target.nodeName == "DIV")
         var elem = evt.target
     else
         var elem = evt.target.parentElement.parentElement
 
-    if (elem.classList.contains('loading')){
-       return;
+    if (elem.classList.contains('loading') || elem.getElementsByClassName('loading').length != 0 || elem.getElementsByTagName('i').length != 0) {
+        return;
     }
 
-    if (elem.classList.contains('selected-image')){
+    if (elem.classList.contains('selected-image')) {
         elem.classList.remove("selected-image")
         changeMetadata(elem.getElementsByTagName('img')[0])
-        if (document.getElementsByClassName('selected-image').length == 0){
+        if (document.getElementsByClassName('selected-image').length == 0) {
             document.getElementById('metadata-window').classList.add('upload-option');
             document.getElementById('input-first').value = ""
             document.getElementById('input-last').value = ""
@@ -81,10 +112,10 @@ function imageClick(evt){
 
         }
     }
-    
-    else{
+
+    else {
         elem.classList.add("selected-image")
-        if (document.getElementsByClassName('selected-image').length == 1){
+        if (document.getElementsByClassName('selected-image').length == 1) {
             var filename = elem.getElementsByTagName('img')[0].getAttribute('filename')
             document.getElementById('input-first').value = stored_files[filename]['photographer']['first']
             document.getElementById('input-last').value = stored_files[filename]['photographer']['last']
@@ -98,17 +129,16 @@ function readFile(file) {
     var reader = new FileReader();
 
     reader.addEventListener("load", function (i) {
-        //console.log(reader.result);
         modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[0].classList.remove('upload-option')
         modal.getElementsByClassName('modal-footer')[0].getElementsByClassName('btn-primary')[1].classList.remove('upload-option')
-        
+
         var wrapper_border = document.createElement('div')
         var loading_wrapper = document.createElement('div')
 
         var new_preview = document.createElement('img')
         new_preview.setAttribute('src', reader.result);
         new_preview.setAttribute('filename', reader.fileName);
-        wrapper_border.addEventListener('click',imageClick);
+        wrapper_border.addEventListener('click', imageClick);
         new_preview.classList.add('preview-image');
 
         loading_wrapper.appendChild(new_preview);
@@ -118,7 +148,7 @@ function readFile(file) {
 
         preview_pane.appendChild(wrapper_border);
 
-        stored_files[reader.fileName]={'image':reader.result,'photographer':{'first':null,'last':null,'email':null},'tags':[]};
+        stored_files[reader.fileName] = { 'image': reader.result, 'photographer': { 'first': null, 'last': null, 'email': null }, 'tags': [] };
     }, false);
 
     reader.fileName = file.name;
@@ -130,21 +160,21 @@ function handleFileSelect(evt) {
     document.getElementById('upload-complete').classList.add('upload-error')
     document.getElementById('upload-complete').classList.add('upload-info')
     document.getElementById('upload-error-type').classList.add('upload-option')
-    
+
     evt.stopPropagation();
     evt.preventDefault();
-    try{
+    try {
         var files = evt.dataTransfer.files
-    }catch (e){
+    } catch (e) {
         var files = document.getElementById('upload-choose').files
     }
 
     for (i = 0; i < files.length; i++) {
-        
+
         if (files[i].type.match(/image\/*/))
             readFile(files[i]);
         else
-            document.getElementById('upload-error-type').classList.remove('upload-option')    
+            document.getElementById('upload-error-type').classList.remove('upload-option')
     }
 }
 
@@ -180,10 +210,9 @@ function hideToast(toast) {
     toast.parentElement.classList.add("upload-option");
 }
 
-function changeMetadata(photograph){
+function changeMetadata(photograph) {
     var filename = photograph.getAttribute('filename')
     stored_files[filename]['photographer']['first'] = document.getElementById('input-first').value
     stored_files[filename]['photographer']['last'] = document.getElementById('input-last').value
     stored_files[filename]['photographer']['email'] = document.getElementById('input-email').value
-    console.log(stored_files)
 }

@@ -70,6 +70,16 @@
       display: none;
     }
 
+  .modal-container {
+    width:60%;
+  }
+ 
+  @media only screen  and (max-width : 768px) {
+    .modal-container {
+      width:80%;
+    }
+  }
+  
   @media only screen and (max-width : 560px){
     .form-group.form-partial{
       display: inline-flex;
@@ -85,16 +95,6 @@
       display: none;
     }
 
-  }
-
-  .modal-container {
-    width:60%;
-  }
-
-  @media only screen  and (max-width : 768px) {
-    .modal-container {
-      width:80%;
-    }
   }
 
   /* Smartphones*/
@@ -123,11 +123,10 @@
   .toast{
     background-color: rgb(196, 216, 236);
     color:rgba(0,44,89,.9);
-    border-color:rgba(0,44,89,.9)
+    border-color:rgba(0,44,89,.9);
     font-weight: 600;
     border-width: .1rem;
     border-radius: .3rem;
-    margin-top: .6rem;
     margin-bottom: .6rem;
   }
   .upload-option{
@@ -176,5 +175,21 @@
     border-radius: .4rem;
     padding: .3rem;
     margin: .2rem;
+  }
+
+  .preview-wrapper .loading.loading-lg img{
+    opacity: 0.4;
+  }
+
+  .preview-wrapper div{
+    position: relative;
+  }
+  .preview-wrapper .icon {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    border-radius: 50%;
+    padding: .6rem;
+    /*color:black;*/
   }
 

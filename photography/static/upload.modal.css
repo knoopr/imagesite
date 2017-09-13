@@ -1,0 +1,88 @@
+.upload-option{
+    display:none;
+}
+
+#upload-window strong{
+    color:#003872
+}
+
+#upload-window strong:hover{
+    color:#8bc4ff
+}
+
+#upload-window{
+    padding:1rem;
+    text-align: center;
+    border-style: solid;
+    border-width: .1rem;
+    border-radius: .3rem;
+}
+
+#upload-modal .modal-footer{
+    text-align: center;
+
+}
+
+#upload-modal .is-dragover{
+    border-style: dashed;
+}
+
+#upload-modal .modal-container{
+    width:40%;
+}
+
+.selected-image{
+    background-color: limegreen;
+}
+
+.preview-image{
+    height: 120px;
+    border-radius: .4rem;
+}
+
+.preview-wrapper{
+    display:inline-block;
+    border-style:solid;
+    border-width: .05rem;
+    border-radius: .4rem;
+    padding: .3rem;
+    margin: .2rem;
+}
+
+.preview-wrapper .loading.loading-lg img{
+    opacity: 0.4;
+}
+
+.preview-wrapper div{
+    position: relative;
+}
+
+.preview-wrapper .icon {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    border-radius: 50%;
+    padding: .6rem;
+}
+
+@media only screen  and (max-width : 1224px) {
+    #upload-modal .modal-container{
+        width:60%;
+    }
+}
+
+@media only screen  and (max-width : 768px) {
+    #upload-modal  .modal-container{
+        width:80%;
+    }
+}
+
+@media only screen  and (max-width : 480px) {
+    #upload-modal .modal-container{
+        width:90%;
+    }
+}
+
+.cloneable-chip{
+    display:none;
+  }

@@ -1,9 +1,16 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+{% block styles %}
+<link rel="stylesheet" href="http://192.168.1.22/static/upload.modal.css">
+{% endblock %}
+
+
+{% block content %}
 <div class="overview">
     <div class="cropped-image">
         <picture>
             <source srcet="/media/test.webp" type="image/webp">-->
-            <img src="/media/Photography_header.jpg" alt="Ontario lakes are gorgeous!">
+            <img src="/media/Photography_header.jpg" alt="Ontario lakes are gorgeous!" onclick="showImageModal(this)" photographer="Samantha Knoop"
+                contactemail="sknoop@gmail.com" tags="['apple','bannana','test','test','test','test','test','test','test','test','test']">
         </picture>
     </div>
     <div class="container">
@@ -20,7 +27,7 @@
                                 <div class="form-autocomplete-input form-input">
                                     <!-- autocomplete chips -->
                                     <div class="chip-list">
-                                        <label class="chip bg-primary text-light" style="display:none;" id="cloneable-chip">
+                                        <label class="chip bg-primary text-light cloneable-chip">
                                         <a class="btn btn-clear" aria-label="Close" role="button" onclick="deleteChip(this)"></a>
                                     </label>
                                     </div>
@@ -145,43 +152,22 @@
 
         </div>
     </div>
-    <div class="modal" id="display-modal">
-        
-        <div class="modal-overlay" onclick="hideModal('display-modal')"></div>
-        <div class="modal-container">
-            <div class="modal-header">
-                <button class="btn btn-clear float-right" onclick="hideModal('display-modal')"></button>
-                <div class="modal-title h5">Modal title</div>
-            </div>
-            <div class="modal-body">
-                <div class="content">
-                    <!-- content here -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                ...
-            </div>
-        </div>
-    </div>
-    {% include "upload_modal.html" %} {% endblock %} {% block javascript %}
-    <!--<script src="/static/masonry.pkgd.min.js"></script>-->
-    {% csrf_token %}
-    <script type="text/javascript" src="/static/packery.pkgd.min.js"></script>
-    <script type="text/javascript" src="/static/search.tags.js"></script>
-    <script type="text/javascript" src="/static/upload.modal.js"></script>
-    <script type="text/javascript">
-        function hideModal(modalName) {
-            var elem = document.getElementById(modalName);
-            elem.classList.remove('active');
-        }
+</div>
 
-        function showImageModal(parent) {
-            var elem = document.getElementById('display-modal');
-            elem.classList.add('active');
-            /*var elem = document.getElementsByClassName('modal-title')[0];
-            elem.innerText = parent.innerText;
-            parent.innerText = "test";*/
-        }
-    </script>
-    <script defer type="text/javascript" src="/static/packery.exec.js"></script>
-    {% endblock %}
+{% include "display_modal.html" %}
+{% include "upload_modal.html" %} {% endblock %} 
+{% block javascript %}
+<!--<script src="/static/masonry.pkgd.min.js"></script>-->
+{% csrf_token %}
+<script type="text/javascript" src="/static/packery.pkgd.min.js"></script>
+<script type="text/javascript" src="/static/search.tags.js"></script>
+<script type="text/javascript" src="/static/upload.modal.js"></script>
+<script type="text/javascript" src="/static/display.modal.js"></script>
+<script type="text/javascript">
+    function hideModal(modalName) {
+        var elem = document.getElementById(modalName);
+        elem.classList.remove('active');
+    }
+</script>
+<script defer type="text/javascript" src="/static/packery.exec.js"></script>
+{% endblock %}

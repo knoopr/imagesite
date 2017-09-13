@@ -9,6 +9,7 @@ var isAdvancedUpload = function () {
 }();
 
 function showUploadModal() {
+    console.log("TEST");
     modal.classList.add('active');
     if (isAdvancedUpload)
         document.getElementById('upload-drag').style.display = 'inline';

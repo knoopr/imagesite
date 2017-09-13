@@ -36,14 +36,13 @@ function tagsListener(tags_field, event) {
 }
 
 function addChip(tags_field, chip_text) {
-    var cloneable_chip = document.getElementById('cloneable-chip');
-    var cloned_chip = cloneable_chip.cloneNode(true)
-
-    cloned_chip.removeAttribute('style');
-    cloned_chip.removeAttribute('id');
-    cloned_chip.childNodes[0].nodeValue = chip_text;
+    var cloneable_chip = tags_field.parentElement.getElementsByClassName('cloneable-chip')[0]
     var chip_list = tags_field.parentNode.getElementsByClassName('chip-list')[0]
-    //var chip_list = document.getElementById('chip-list');
+    
+    var cloned_chip = cloneable_chip.cloneNode(true);
+    cloned_chip.classList.remove('cloneable-chip');
+    cloned_chip.childNodes[0].nodeValue = chip_text;
+    
     chip_list.append(cloned_chip);
 
 }

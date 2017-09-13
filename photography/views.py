@@ -10,20 +10,26 @@ def index(request):
     if request.method == 'GET':
         template = get_template('index.html')
         test_range = []
-        for i in range(0, 20):
+        for i in range(0, 50):
             test_range.append(i)
-        html = template.render(context={'test_range':test_range}, request = request)
+        widths = ["10%","20%","30%"]
+        pictures = ["pic1.jpg","pic2.jpg","pic3.jpg","pic4.jpg","pic5.jpg"]
+        html = template.render(context={'test_range':test_range, 'widths':widths,'test_photos':pictures}, request = request)
 
         return HttpResponse(html)
     if request.method == 'POST':
         json_data = json.loads(request.body)
-        upload_name = json_data['filename']
-        upload_image = json_data['data']['image']
-        upload_photographer = json_data['data']['photographer']
-        upload_tags = json_data['data']['tags']
+        if ('quality' in json_data):
+            print (json_data['quality'])
+            return JsonResponse({'success':1, 'quality':json_data['quality']})
+        elif ('filename' in json_data):
+            upload_name = json_data['filename']
+            upload_image = json_data['data']['image']
+            upload_photographer = json_data['data']['photographer']
+            upload_tags = json_data['data']['tags']
 
-        print(upload_tags)
-        return JsonResponse({'success':1, 'filename':upload_name});
+            print(upload_tags)
+            return JsonResponse({'success':1, 'filename':upload_name});
         
 
         '''all_images = json_data['Images']

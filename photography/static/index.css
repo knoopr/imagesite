@@ -19,6 +19,9 @@
   margin:-400px 0 0 0;
 }
 
+.grid{
+  background-color:black;
+}
 .grid:after {
     content: '';
     display: block;
@@ -28,24 +31,23 @@
   
 
   .grid-item {
-    float: left;
     width:20%;
-    height: 400px;
-    padding-bottom:20%;
-    background: #C09;
-    border: 2px solid hsla(0, 0%, 0%, 0.5);
+    height: auto;
+    background-color:black;
+    border: 2px solid;
+  }
+  .grid-item.contains{
+    /*display:block;*/
+    height: auto;
+  }
+  .grid-item img{
+    display:block;
+    width:100%;
   }
   
-  .grid-item--width2 { width: 40%; }
+  .grid-item--half { width: 10%;}
+  .grid-item--width2 { width: 40%;}
   .grid-item--width3 { width: 60%;}
-  .grid-item--height2 { height: 200px; }
-
-
-
-  .card {
-    background: #C09;
-    border:none;
-  }
 
   .modal.active .modal-overlay, modal:target .modal-overlay{
     background-color:black;

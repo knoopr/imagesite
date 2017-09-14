@@ -1,10 +1,14 @@
 from django.db import models
 from django.utils import timezone
+from django.dispatch import receiver
+from django.conf import settings
+from os import path, remove, listdir
 from .Photographer import Photographer
 
 
 class Photograph(models.Model):
-    alt_text = models.CharField(max_length=126, blank=False)
+    #alt_text = models.CharField(max_length=126, blank=False)
+    alt_text = models.CharField(max_length=126, blank=True)
     date_taken = models.DateField(default=timezone.now())
     date_uploaded = models.DateField(default=timezone.now())
     image_data = models.ImageField(upload_to='./', blank=False)
@@ -12,3 +16,7 @@ class Photograph(models.Model):
 
     def __str__(self):
         return self.alt_text
+    
+
+
+

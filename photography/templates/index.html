@@ -9,7 +9,7 @@
         </picture>
     </div>
     <div class="container">
-        <div class="columns search-criteria">
+        <div class="columns" id="search-criteria">
             <div class="column col-7 col-xl-6 col-lg-12">
                 <form class="form-horizontal">
                     <div class="form-group">
@@ -56,20 +56,33 @@
             <div class="column col-5 col-xl-6 col-lg-12 search-buttons">
                 <form class="form-horizontal">
                     <div class="form-group form-full">
-                        <div class="dropdown col-3 col-xl-4">
-                            <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
-                                Photographer <i class="icon icon-caret"></i>
+                        <div class="dropdown col-3 col-xl-4 photographer-dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle">
+                                Photographer
+                                <i class="icon icon-caret"></i>
                             </button>
                             <ul class="menu">
-                                <li class="menu-item">test</li>
-                                <li class="menu-item">test2</li>
+                                <li class="menu-item" onclick="changePhotographer(this)">Any</li>
+                                {% for photographer in Photographers %}
+                                <li class="menu-item" onclick="changePhotographer(this)">{{photographer}}</li>
+                                {%endfor%}
                             </ul>
                         </div>
                         <div class="image-quality col-6 col-sm-4 col-xs-4">
-                            <div class="btn-group">
+                            <div class="btn-group" id="quality-group">
+                                {% if request.session.quality == "High" %}
+                                <button type="button" class="btn" onclick="changeQuality(this)">Low</button>
+                                <button type="button" class="btn" onclick="changeQuality(this)">Medium</button>
+                                <button type="button" class="btn active" onclick="changeQuality(this)">High</button> 
+                                {% elif request.session.quality == "Medium" %}
+                                <button type="button" class="btn " onclick="changeQuality(this)">Low</button>
+                                <button type="button" class="btn active" onclick="changeQuality(this)">Medium</button>
+                                <button type="button" class="btn" onclick="changeQuality(this)">High</button> 
+                                {% else %}
                                 <button type="button" class="btn active" onclick="changeQuality(this)">Low</button>
                                 <button type="button" class="btn" onclick="changeQuality(this)">Medium</button>
-                                <button type="button" class="btn" onclick="changeQuality(this)">High</button>
+                                <button type="button" class="btn" onclick="changeQuality(this)">High</button> 
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-3 col-xl-4">
@@ -79,23 +92,35 @@
                     </div>
                     <div class="form-group form-partial">
                         <div class="btn-group" style="width:100%">
-                            <div class="dropdown">
-                                <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
+                            <div class="dropdown photographer-dropdown">
+                                <button type="button" class="btn btn-primary dropdown-toggle " tabindex="0">
                                     Photographer <i class="icon icon-caret"></i>
                                 </button>
                                 <ul class="menu">
-                                    <li class="menu-item">test</li>
-                                    <li class="menu-item">test2</li>
+                                    <li class="menu-item" onclick="changePhotographer(this)">Any</li>
+                                    {% for photographer in Photographers %}
+                                    <li class="menu-item" onclick="changePhotographer(this)">{{photographer.first_name}}</li>
+                                    {%endfor%}
                                 </ul>
                             </div>
-                            <div class="dropdown">
+                            <div class="dropdown" id="quality-menu">
+                                {% if request.session.quality == "High" %}
                                 <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
-                                        Image Quality <i class="icon icon-caret"></i>
-                                    </button>
+                                    High <i class="icon icon-caret"></i>
+                                </button> 
+                                {% elif request.session.quality == "Medium" %}
+                                <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
+                                    Medium <i class="icon icon-caret"></i>
+                                </button> 
+                                {% else %}
+                                <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
+                                    Low <i class="icon icon-caret"></i>
+                                </button> 
+                                {% endif %}
                                 <ul class="menu">
                                     <li class="menu-item">Low</li>
                                     <li class="menu-item">Medium</li>
-                                    <li class="menu-item">High</li>
+                                    <li class="menu-item active">High</li>
                                 </ul>
                             </div>
                             <div>
@@ -108,37 +133,18 @@
         </div>
 
     </div>
-    <div class="container">
+    <div class="container" id="grid-container">
         <div class="grid">
+            {%comment%}
             {% for number in test_range %}
-            <div class="grid-item contains" style="width:{{widths|random}}"> <img src="/media/{{test_photos|random}}"></div>
+            <!--<div class="grid-item contains" style="width:{{widths|random}}"> 
+                <!--<source type="image/webp" srcset=""}
+                <img src="/media/{{test_photos|random}}">
+            </div>-->
             {% endfor %}
-            <!--<div class="grid-item">3</div>
-        <div class="grid-item grid-item--width3">4</div>
-        <div class="grid-item grid-item--width2 grid-item--height2">5</div>
-        <div class="grid-item grid-item--width2">6</div>
-        <div class="grid-item grid-item--width2">7</div>
-        <div class="grid-item grid-item--height2">8</div>
-        <div class="grid-item">9</div>
-        <div class="grid-item grid-item--width3">10</div>
-        <div class="grid-item grid-item--height2">11</div>
-        <div class="grid-item">12</div>
-        <div class="grid-item">13</div>
-        <div class="grid-item grid-item--width3">14</div>
-        <div class="grid-item grid-item--height2">15</div>
-        <div class="grid-item">16</div>
-        <div class="grid-item">17</div>
-        <div class="grid-item grid-item--width3 grid-item--height2">18</div>
-        <div class="grid-item grid-item--width3">19</div>
-        <div class="grid-item grid-item--width2">20</div>
-        <div class="grid-item grid-item--height2">21</div>
-        <div class="grid-item">22</div>
-        <div class="grid-item grid-item--width2">23</div>
-        <div class="grid-item grid-item--height2">24</div>
-        <div class="grid-item">25</div>
-        <div class="grid-item grid-item--width3">26</div>-->
-
+            {%endcomment%}
         </div>
+        <button type="button" class="btn btn-primary" id="load-images" onclick="loadImages()">Load Images</button>
     </div>
 </div>
 
@@ -151,6 +157,8 @@
 <script type="text/javascript" src="/static/upload.modal.js"></script>
 <script type="text/javascript" src="/static/display.modal.js"></script>
 <script type="text/javascript">
+    var images_loaded = 0
+
     function hideModal(modalName) {
         var elem = document.getElementById(modalName);
         elem.classList.remove('active');
@@ -159,27 +167,104 @@
     function changeQuality(button) {
         if (!button.classList.contains('active')) {
             var quality = button.innerText;
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '.');
-            xhr.setRequestHeader("CONTENT-TYPE", "application/javascript");
-            xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-            xhr.onreadystatechange = function () {
-                var DONE = 4; // readyState 4 means the request is done.
-                var OK = 200; // status 200 is a successful return.
-                if (xhr.readyState === DONE) {
-                    if (!xhr.status === OK) {
-                        window.alert("There was an error changing your quality");
-                    }
-                    else {
-                        var current = button.parentElement.getElementsByClassName('active')[0]
-                        
-                        current.classList.remove('active');
-                        button.classList.add('active');
-                    }
-                }
-                }
-            xhr.send(JSON.stringify({ "quality": quality }));
+            var current = document.getElementById('quality-group').getElementsByClassName('active')[0]
+
+            var parent = document.getElementById('quality-group');
+            for (i in parent.childNodes) {
+                if (parent.childNodes[i].innerText == current.innerText)
+                    parent.childNodes[i].classList.remove('active')
+                else if (parent.childNodes[i].innerText == button.innerText)
+                    parent.childNodes[i].classList.add('active')
+            }
+
+            var parent = document.getElementById('quality-menu');
+            parent.getElementsByTagName('button')[0].childNodes[0].nodeValue = button.innerText.trim();
         }
+    }
+
+    function changePhotographer(selection) {
+        var parents = document.getElementsByClassName('photographer-dropdown')
+        for (i = 0; i < parents.length; i++) {
+            parents[i].getElementsByTagName('button')[0].childNodes[0].nodeValue = selection.innerText.trim();
+        }
+    }
+
+    function loadImages() {
+        var quality = document.getElementById('quality-group').getElementsByClassName('active')[0].innerText;
+        var photographer = document.getElementsByClassName('photographer-dropdown')[0].getElementsByTagName('button')[0].childNodes[0].nodeValue.trim()
+        var tags = []
+
+        var chips = document.getElementById("search-criteria").getElementsByClassName('chip')
+        for (i = 1; i < chips.length; i++) {
+            tags.push(chips[i].childNodes[0].nodeValue)
+        }
+        
+        if (photographer != "Photographer" && photographer != "Any"){
+            console.log("TEST2");
+            var data = {
+                'quality':quality,
+                'photographer':photographer,
+                'tags':tags,
+                'loaded':images_loaded
+            };
+        }else{
+            var data = {
+                'quality':quality,
+                'photographer':null,
+                'tags':tags,
+                'loaded':images_loaded
+            };
+        }
+        var requestData = Object.keys(data).map((i) => i+'='+data[i]).join('&')
+
+        //var parameters = 'quality=%s
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '.?'+requestData);
+        xhr.setRequestHeader("CONTENT-TYPE", "application/javascript");
+        xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+        xhr.onreadystatechange = function () {
+            var DONE = 4; // readyState 4 means the request is done.
+            var OK = 200; // status 200 is a successful return.
+            if (xhr.readyState === DONE) {
+                if (!xhr.status === OK) {
+                    window.alert("There was an error loading the images");
+                }
+                else {
+                    var grid_elem = document.getElementById('grid-container').getElementsByClassName('grid')[0];
+                    
+                    var response = JSON.parse(xhr.responseText)
+
+                    for (i in response){
+                        var item_wrapper = document.createElement('div');
+                        item_wrapper.classList.add('grid-item');
+                        item_wrapper.style.width = response[i]['width'];
+
+                        var item_image = document.createElement('img');
+                        item_image.setAttribute('src',response[i]['image_location']);
+                        item_image.setAttribute('photographer', response[i]['photographer']['name']);
+                        item_image.setAttribute('contactemail', response[i]['photographer']['email']);
+                        item_image.setAttribute('tags', response[i]['tags']);
+
+                        item_wrapper.appendChild(item_image);
+                        grid_elem.appendChild(item_wrapper)
+
+                        images_loaded += 1;
+                    }
+                imagesLoaded('.grid',function(){
+                    var pckry = new Packery('.grid', {
+                    // options
+                    itemSelector: '.grid-item',
+                    gutter:0,
+                    transitionDuration: 0,
+                    initLayout: true
+                    });
+                });   
+                }
+            }
+        }
+        xhr.send(null);
+        //xhr.send("{'test':'test'}")
     }
 
 </script>

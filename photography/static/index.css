@@ -36,10 +36,6 @@
     background-color:black;
     border: 2px solid;
   }
-  .grid-item.contains{
-    /*display:block;*/
-    height: auto;
-  }
   .grid-item img{
     display:block;
     width:100%;
@@ -60,7 +56,7 @@
     100%  { opacity: 0.82; }
     }
 
-    .search-criteria .btn.btn-primary {
+    #search-criteria .btn.btn-primary {
       width:125px;
     }
   
@@ -70,6 +66,22 @@
     
     .form-group.form-partial{
       display: none;
+    }
+
+    .form-group.form-full{
+      margin-bottom:0;
+    }
+    .dropdown .menu .menu-item:hover{
+      cursor: pointer;
+      background-color:#97CBFF;
+    }
+
+    #load-images {
+      margin:.4rem;
+    }
+
+    #grid-container{
+      text-align: center;
     }
   
   @media only screen and (max-width : 560px){

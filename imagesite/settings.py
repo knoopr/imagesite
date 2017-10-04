@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 try:
-    file = open('./imagesite/Credentials').read() # pylint: disable=invalid-name
+    file = open('./Credentials').read() # pylint: disable=invalid-name
     SECRET_KEY = literal_eval(file)['secret-key'] # pylint: disable=invalid-name
 except ImportError:
     pass
@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'imagesite.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 try:
-    file = open('./imagesite/Credentials').read() # pylint: disable=invalid-name
+    file = open('./Credentials').read() # pylint: disable=invalid-name
     db_credentials = literal_eval(file) # pylint: disable=invalid-name
 except ImportError:
     pass
@@ -137,7 +137,7 @@ MEDIA_URL = '/media/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATICFILES_DIRS = ["/imagesite/imagesite/static/","/imagesite/photography/static/"]
-#STATIC_ROOT = '/imagesite/imagesite/static/'
+STATIC_ROOT = '/imagesite/static/'
 STATIC_URL = '/static/'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800

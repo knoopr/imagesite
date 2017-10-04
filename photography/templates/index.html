@@ -1,11 +1,11 @@
 {% extends 'base.html' %} {% block styles %}
-<link rel="stylesheet" href="http://192.168.1.22/static/upload.modal.css"> {% endblock %} {% block content %}
+<link rel="stylesheet" href="/static/upload.modal.css"> {% endblock %} {% block content %}
 <div class="overview">
     <div class="cropped-image">
         <picture>
             <source srcet="/media/test.webp" type="image/webp">-->
-            <img src="/media/Photography_header.jpg" alt="Ontario lakes are gorgeous!" onclick="showImageModal(this)" photographer="Samantha Knoop"
-                contactemail="sknoop@gmail.com" tags="['apple','bannana','test','test','test','test','test','test','test','test','test']">
+            <img src="/media/Photography_header.jpg" alt="Ontario lakes are gorgeous!" photographer="Samantha Knoop"
+               tags="['apple','bannana','test','test','test','test','test','test','test','test','test']">
         </picture>
     </div>
     <div class="container">
@@ -118,9 +118,9 @@
                                 </button> 
                                 {% endif %}
                                 <ul class="menu">
-                                    <li class="menu-item">Low</li>
-                                    <li class="menu-item">Medium</li>
-                                    <li class="menu-item active">High</li>
+                                    <li class="menu-item" onclick="changeQuality(this)">Low</li>
+                                    <li class="menu-item" onclick="changeQuality(this)">Medium</li>
+                                    <li class="menu-item" onclick="changeQuality(this)">High</li>
                                 </ul>
                             </div>
                             <div>
@@ -200,7 +200,6 @@
         }
         
         if (photographer != "Photographer" && photographer != "Any"){
-            console.log("TEST2");
             var data = {
                 'quality':quality,
                 'photographer':photographer,
@@ -238,13 +237,17 @@
                     for (i in response){
                         var item_wrapper = document.createElement('div');
                         item_wrapper.classList.add('grid-item');
-                        item_wrapper.style.width = response[i]['width'];
+                        if (window.innerWidth > 560)
+                            item_wrapper.style.width = response[i]['width'];
+                        else
+                            item_wrapper.style.width = "100%";
 
                         var item_image = document.createElement('img');
                         item_image.setAttribute('src',response[i]['image_location']);
                         item_image.setAttribute('photographer', response[i]['photographer']['name']);
                         item_image.setAttribute('contactemail', response[i]['photographer']['email']);
                         item_image.setAttribute('tags', response[i]['tags']);
+                        item_image.setAttribute('onclick', 'showImageModal(this)');
 
                         item_wrapper.appendChild(item_image);
                         grid_elem.appendChild(item_wrapper)

@@ -1,15 +1,55 @@
 var modal = document.getElementById('upload-modal');
 var stored_files = {};
 var preview_pane = document.getElementById('upload-preview');
-
+var ctrl_pressed = false;
+var a_pressed = false;
 
 var isAdvancedUpload = function () {
     var div = document.createElement('div');
     return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
 }();
 
+document.onselectstart = new Function("return false");
+document.addEventListener("keydown", function(event){
+    var i = 0;
+
+    if (document.getElementById('upload-modal').classList.contains('active'))
+        var key = event.keyCode;
+        if (key == 17)
+            ctrl_pressed = true;
+        else if (key == 65)
+            a_pressed = true;
+
+        if (ctrl_pressed && a_pressed){
+            var wrappers = preview_pane.getElementsByClassName('preview-wrapper');
+            var selected = preview_pane.getElementsByClassName('selected-image');
+            if (selected.length == 0 || selected.length == wrappers.length){
+               for (i = 0; i < wrappers.length; i++){
+                   setSelected(wrappers[i]);
+                }
+            }
+            else{
+                for (i = 0; i < wrappers.length; i++){
+                    if (!wrappers[i].classList.contains('selected-image'))
+                        setSelected(wrappers[i]);
+                }
+            }
+        }
+
+});
+
+document.addEventListener("keyup", function(event){
+    if (document.getElementById('upload-modal').classList.contains('active'))
+        var key = event.keyCode;
+        if (key == 17)
+            ctrl_pressed = false;
+        else if (key == 65)
+            a_pressed = false;
+});
+
+
+
 function showUploadModal() {
-    console.log("TEST");
     modal.classList.add('active');
     if (isAdvancedUpload)
         document.getElementById('upload-drag').style.display = 'inline';
@@ -105,19 +145,10 @@ function uploadImages() {
     }
 }
 
-function imageClick(evt) {
-    if (evt.target.nodeName == "DIV") {
-        var elem = evt.target
-        if (!elem.classList.contains("preview-wrapper"))
-            elem = elem.parentElement;
-    } else
-        var elem = evt.target.parentElement.parentElement
-
-    if (elem.classList.contains('loading') || elem.getElementsByClassName('loading').length != 0 || elem.getElementsByTagName('i').length != 0) {
-        return;
-    }
-
+function setSelected(elem){    
     if (elem.classList.contains('selected-image')) {
+        //console.log("Selected:");
+        //console.log(elem);
         elem.classList.remove("selected-image")
         changeMetadata(elem.getElementsByTagName('img')[0])
         if (document.getElementsByClassName('selected-image').length == 0) {
@@ -134,6 +165,8 @@ function imageClick(evt) {
     }
 
     else {
+        //console.log("Not SELECTED:");
+        //console.log(elem);
         elem.classList.add("selected-image")
         if (document.getElementsByClassName('selected-image').length == 1) {
             var filename = elem.getElementsByTagName('img')[0].getAttribute('filename')
@@ -147,6 +180,22 @@ function imageClick(evt) {
         }
         document.getElementById('metadata-window').classList.remove('upload-option');
     }
+}
+
+function imageClick(evt) {
+    if (evt.target.nodeName == "DIV") {
+        var elem = evt.target
+        if (!elem.classList.contains("preview-wrapper"))
+            elem = elem.parentElement;
+    } else
+        var elem = evt.target.parentElement.parentElement
+
+    if (elem.classList.contains('loading') || elem.getElementsByClassName('loading').length != 0 || elem.getElementsByTagName('i').length != 0) {
+        return;
+    }
+
+    setSelected(elem);
+    
 }
 
 function readFile(file) {
@@ -179,7 +228,7 @@ function readFile(file) {
         reader.fileName = file.name;
     }
     else{
-        console.log(preview_pane.querySelectorAll('[filename="' + file.name + '"]').length)
+        //console.log(preview_pane.querySelectorAll('[filename="' + file.name + '"]').length)
         var i = 1;
         do
             i++

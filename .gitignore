@@ -6,7 +6,7 @@ Credentials
 
 #ignore collected static files
 imagesite/static/admin/*
-static/admin/*
+static/*
 
 manage.py
 

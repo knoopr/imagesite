@@ -1,11 +1,12 @@
 #ignore credentials
-imagesite/Credentials
+Credentials
 
 #ignoring .pyc files
 *.pyc
 
 #ignore collected static files
 imagesite/static/admin/*
+static/admin/*
 
 manage.py
 

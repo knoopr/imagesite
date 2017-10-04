@@ -145,3 +145,12 @@
   .cloneable-chip{
     display:none;
   }
+
+  #albums{
+    margin-top:.4rem  
+  }
+
+  #albums .columns{
+    padding-top:.4rem;
+    padding-bottom:.4rem;
+  }

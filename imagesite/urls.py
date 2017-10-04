@@ -21,6 +21,7 @@ import imagesite.views as views;
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'photography/', include('photography.urls')),
-    url(r'^base/$', views.base),
+    url(r'^', include('photography.urls')),
+#    url(r'photography/', include('photography.urls')),
+#   url(r'^base/$', views.base),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

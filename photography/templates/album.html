@@ -1,0 +1,274 @@
+{% extends 'base.html' %} {% block styles %}
+<link rel="stylesheet" href="/static/photography.css">
+<link rel="stylesheet" href="/static/upload.modal.css"> {% endblock %} {% block content %}
+<div class="overview">
+    <div class="cropped-image">
+        <picture>
+            <source srcet="/media/test.webp" type="image/webp">-->
+            <img src="/media/Photography_header.jpg" alt="Ontario lakes are gorgeous!" photographer="Samantha Knoop">
+        </picture>
+    </div>
+    <div class="container">
+        <div class="columns" id="search-criteria">
+            <div class="column col-7 col-xl-6 col-lg-12">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-2 col-sm-3">
+                            <label class="form-label" for="search-tags">Search tags: </label>
+                        </div>
+                        <div class="col-10 col-sm-9">
+                            <div class="form-autocomplete">
+                                <!-- autocomplete input container -->
+                                <div class="form-autocomplete-input form-input">
+                                    <!-- autocomplete chips -->
+                                    <div class="chip-list">
+                                        <label class="chip bg-primary text-light cloneable-chip">
+                                        <a class="btn btn-clear" aria-label="Close" role="button" onclick="deleteChip(this)"></a>
+                                    </label>
+                                    </div>
+                                    <!-- autocomplete real input box -->
+                                    <input class="form-input" id="search-tags" type="text" placeholder="Input search tags" oninput="return tagsListener(this, event)"
+                                        onkeydown="return tagsListener(this, event)" />
+                                </div>
+                                <!-- autocomplete suggestion list
+                    <ul class="menu">
+                      <li class="menu-item">
+                        <a href="#">
+                          <div class="tile tile-centered">
+                            <div class="tile-icon">
+                              <img src="img/avatar-4.png" class="avatar avatar-sm" alt="Steve Rogers" />
+                            </div>
+                            <div class="tile-content">
+                              Steve Rogers
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                    </ul>-->
+
+                            </div>
+                        </div>
+                        <!-- form structure -->
+                </form>
+
+                </div>
+            </div>
+            <div class="column col-5 col-xl-6 col-lg-12 search-buttons">
+                <form class="form-horizontal">
+                    <div class="form-group form-full">
+                        <div class="dropdown col-3 col-xl-4 photographer-dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle">
+                                Photographer
+                                <i class="icon icon-caret"></i>
+                            </button>
+                            <ul class="menu">
+                                <li class="menu-item" onclick="changePhotographer(this)">Any</li>
+                                {% for photographer in Photographers %}
+                                <li class="menu-item" onclick="changePhotographer(this)">{{photographer}}</li>
+                                {%endfor%}
+                            </ul>
+                        </div>
+                        <div class="image-quality col-6 col-sm-4 col-xs-4">
+                            <div class="btn-group" id="quality-group">
+                                {% if request.session.quality == "High" %}
+                                <button type="button" class="btn" onclick="changeQuality(this)">Low</button>
+                                <button type="button" class="btn" onclick="changeQuality(this)">Medium</button>
+                                <button type="button" class="btn active" onclick="changeQuality(this)">High</button> 
+                                {% elif request.session.quality == "Medium" %}
+                                <button type="button" class="btn " onclick="changeQuality(this)">Low</button>
+                                <button type="button" class="btn active" onclick="changeQuality(this)">Medium</button>
+                                <button type="button" class="btn" onclick="changeQuality(this)">High</button> 
+                                {% else %}
+                                <button type="button" class="btn active" onclick="changeQuality(this)">Low</button>
+                                <button type="button" class="btn" onclick="changeQuality(this)">Medium</button>
+                                <button type="button" class="btn" onclick="changeQuality(this)">High</button> 
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-3 col-xl-4">
+                            <button type="button" class="btn btn-primary" tabindex="0" style="float:right;" onclick="showUploadModal()">Upload</button>
+                        </div>
+
+                    </div>
+                    <div class="form-group form-partial">
+                        <div class="btn-group" style="width:100%">
+                            <div class="dropdown photographer-dropdown">
+                                <button type="button" class="btn btn-primary dropdown-toggle " tabindex="0">
+                                    Photographer <i class="icon icon-caret"></i>
+                                </button>
+                                <ul class="menu">
+                                    <li class="menu-item" onclick="changePhotographer(this)">Any</li>
+                                    {% for photographer in Photographers %}
+                                    <li class="menu-item" onclick="changePhotographer(this)">{{photographer.first_name}}</li>
+                                    {%endfor%}
+                                </ul>
+                            </div>
+                            <div class="dropdown" id="quality-menu">
+                                {% if request.session.quality == "High" %}
+                                <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
+                                    High <i class="icon icon-caret"></i>
+                                </button> 
+                                {% elif request.session.quality == "Medium" %}
+                                <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
+                                    Medium <i class="icon icon-caret"></i>
+                                </button> 
+                                {% else %}
+                                <button type="button" class="btn btn-primary dropdown-toggle" tabindex="0">
+                                    Low <i class="icon icon-caret"></i>
+                                </button> 
+                                {% endif %}
+                                <ul class="menu">
+                                    <li class="menu-item" onclick="changeQuality(this)">Low</li>
+                                    <li class="menu-item" onclick="changeQuality(this)">Medium</li>
+                                    <li class="menu-item" onclick="changeQuality(this)">High</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-primary" onclick="showUploadModal()">Upload</button>
+                            </div>
+                        </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="grid-container">
+        <div class="grid">
+            {%comment%}
+            {% for number in test_range %}
+            <!--<div class="grid-item contains" style="width:{{widths|random}}"> 
+                <!--<source type="image/webp" srcset=""}
+                <img src="/media/{{test_photos|random}}">
+            </div>-->
+            {% endfor %}
+            {%endcomment%}
+        </div>
+        <button type="button" class="btn btn-primary" id="load-images" onclick="loadImages()">Load Images</button>
+    </div>
+</div>
+
+{% include "display_modal.html" %} {% include "upload_modal.html" %} {% endblock %} {% block javascript %}
+<!--<script src="/static/masonry.pkgd.min.js"></script>-->
+{% csrf_token %}
+<script type="text/javascript" src="/static/imagesloaded.pkgd.min.js"></script>
+<script type="text/javascript" src="/static/packery.pkgd.min.js"></script>
+<script type="text/javascript" src="/static/search.tags.js"></script>
+<script type="text/javascript" src="/static/upload.modal.js"></script>
+<script type="text/javascript" src="/static/display.modal.js"></script>
+<script type="text/javascript">
+    var images_loaded = 0
+
+    function hideModal(modalName) {
+        var elem = document.getElementById(modalName);
+        elem.classList.remove('active');
+    }
+
+    function changeQuality(button) {
+        if (!button.classList.contains('active')) {
+            var quality = button.innerText;
+            var current = document.getElementById('quality-group').getElementsByClassName('active')[0]
+
+            var parent = document.getElementById('quality-group');
+            for (i in parent.childNodes) {
+                if (parent.childNodes[i].innerText == current.innerText)
+                    parent.childNodes[i].classList.remove('active')
+                else if (parent.childNodes[i].innerText == button.innerText)
+                    parent.childNodes[i].classList.add('active')
+            }
+
+            var parent = document.getElementById('quality-menu');
+            parent.getElementsByTagName('button')[0].childNodes[0].nodeValue = button.innerText.trim();
+        }
+    }
+
+    function changePhotographer(selection) {
+        var parents = document.getElementsByClassName('photographer-dropdown')
+        for (i = 0; i < parents.length; i++) {
+            parents[i].getElementsByTagName('button')[0].childNodes[0].nodeValue = selection.innerText.trim();
+        }
+    }
+
+    function loadImages() {
+        var quality = document.getElementById('quality-group').getElementsByClassName('active')[0].innerText;
+        var photographer = document.getElementsByClassName('photographer-dropdown')[0].getElementsByTagName('button')[0].childNodes[0].nodeValue.trim()
+        var tags = []
+
+        var chips = document.getElementById("search-criteria").getElementsByClassName('chip')
+        for (i = 1; i < chips.length; i++) {
+            tags.push(chips[i].childNodes[0].nodeValue)
+        }
+        
+        if (photographer != "Photographer" && photographer != "Any"){
+            var data = {
+                'quality':quality,
+                'photographer':photographer,
+                'tags':tags,
+                'loaded':images_loaded
+            };
+        }else{
+            var data = {
+                'quality':quality,
+                'photographer':null,
+                'tags':tags,
+                'loaded':images_loaded
+            };
+        }
+        var requestData = Object.keys(data).map((i) => i+'='+data[i]).join('&')
+
+        //var parameters = 'quality=%s
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '.?'+requestData);
+        xhr.setRequestHeader("CONTENT-TYPE", "application/javascript");
+        xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+        xhr.onreadystatechange = function () {
+            var DONE = 4; // readyState 4 means the request is done.
+            var OK = 200; // status 200 is a successful return.
+            if (xhr.readyState === DONE) {
+                if (!xhr.status === OK) {
+                    window.alert("There was an error loading the images");
+                }
+                else {
+                    var grid_elem = document.getElementById('grid-container').getElementsByClassName('grid')[0];
+                    
+                    var response = JSON.parse(xhr.responseText)
+
+                    for (i in response){
+                        var item_wrapper = document.createElement('div');
+                        item_wrapper.classList.add('grid-item');
+                        if (window.innerWidth > 560)
+                            item_wrapper.style.width = response[i]['width'];
+                        else
+                            item_wrapper.style.width = "100%";
+
+                        var item_image = document.createElement('img');
+                        item_image.setAttribute('src',response[i]['image_location']);
+                        item_image.setAttribute('photographer', response[i]['photographer']['name']);
+                        item_image.setAttribute('contactemail', response[i]['photographer']['email']);
+                        item_image.setAttribute('tags', response[i]['tags']);
+                        item_image.setAttribute('onclick', 'showImageModal(this)');
+
+                        item_wrapper.appendChild(item_image);
+                        grid_elem.appendChild(item_wrapper)
+
+                        images_loaded += 1;
+                    }
+                imagesLoaded('.grid',function(){
+                    var pckry = new Packery('.grid', {
+                    // options
+                    itemSelector: '.grid-item',
+                    gutter:0,
+                    transitionDuration: 0,
+                    initLayout: true
+                    });
+                });   
+                }
+            }
+        }
+        xhr.send(null);
+        //xhr.send("{'test':'test'}")
+    }
+
+</script>
+<script defer type="text/javascript" src="/static/packery.exec.js"></script>
+{% endblock %}

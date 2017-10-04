@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 try:
-    file = open('./Credentials').read() # pylint: disable=invalid-name
+    file = open('/imagesite/Credentials').read() # pylint: disable=invalid-name
     SECRET_KEY = literal_eval(file)['secret-key'] # pylint: disable=invalid-name
 except ImportError:
     pass
@@ -31,7 +31,12 @@ except ImportError:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "192.168.1.22"]
+try:
+    file = open('/imagesite/Credentials').read() # pylint: disable=invalid-name
+    ALLOWED_HOSTS = literal_eval(file)['Allowed_Hosts'] # pylint: disable=invalid-name
+except ImportError:
+    pass
+
 
 
 # Application definition
@@ -81,7 +86,7 @@ WSGI_APPLICATION = 'imagesite.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 try:
-    file = open('./Credentials').read() # pylint: disable=invalid-name
+    file = open('/imagesite/Credentials').read() # pylint: disable=invalid-name
     db_credentials = literal_eval(file) # pylint: disable=invalid-name
 except ImportError:
     pass

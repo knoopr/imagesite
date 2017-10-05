@@ -79,7 +79,7 @@ function clearUploads() {
 
 function sendRequest(photo) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '.');
+    xhr.open('POST', '/');
     xhr.setRequestHeader("CONTENT-TYPE", "application/javascript");
     xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
     xhr.onreadystatechange = function () {

@@ -24,6 +24,7 @@ class ImageProcessor:
                 full_path = path.join(settings.MEDIA_ROOT, temp_name+ "-High.jpg")
         full_path = path.join(settings.MEDIA_ROOT, temp_name)
         try:
+            print("TEST\n")
             self.img.save(full_path+"-High.jpg", quality=85, subsampling=-1)
             self.img.save(full_path+"-Medium.jpg", quality=55, subsampling=-1, optimize=True)
             self.img.save(full_path+"-Low.jpg", quality=25, optimize=True)

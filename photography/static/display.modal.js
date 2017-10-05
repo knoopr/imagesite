@@ -25,6 +25,45 @@ function sizeImageModal() {
     //footer_elem.style.width = modal_image.clientWidth + "px";
 }
 
+function changeAlbum(album){
+    var modal_image = document.getElementById('modal-image');
+    var file_name = modal_image.getAttribute('src').substr(7).split('-');
+    if (file_name.length == 2)
+        file_name = file_name[0];
+    else{
+        file_name.pop();
+        file_name = file_name.join('-');
+        console.log(file_name)
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', '/');
+    xhr.setRequestHeader("CONTENT-TYPE", "application/javascript");
+    xhr.setRequestHeader("X-CSRFToken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+    xhr.onreadystatechange = function () {
+        var DONE = 4; // readyState 4 means the request is done.
+        var OK = 200; // status 200 is a successful return.
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+                alert("Album changed succesfully")
+                document.getElementById('album-selection').childNodes[0].nodeValue = (album == "None"? "Album" : album.innerText);
+                var images = document.getElementsByClassName('grid-item')
+                for (var i = 0; i < images.length; ++i) {
+                    if (images[i].getElementsByTagName('img')[0].getAttribute('src') == modal_image.getAttribute('src')){
+                        images[i].getElementsByTagName('img')[0].setAttribute('album',album.innerText)
+                    }
+                        
+                }
+            } else {
+                alert("A server error occured")
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ "filename": file_name, "album":album.innerText}));
+
+}
+
+
 function showImageModal(parent) {
     var modal = document.getElementById('display-modal');
     var modal_image = document.getElementById('modal-image')
@@ -38,6 +77,7 @@ function showImageModal(parent) {
     var photographer = parent.getAttribute('photographer')
     var contact_email = parent.getAttribute('contactemail')
     //var tags = parent.getAttribute('tags')
+    var album = parent.getAttribute('album')
     var image = parent.getAttribute('src')
 
     /*if (tags.indexOf("'") > -1) {
@@ -47,6 +87,8 @@ function showImageModal(parent) {
 
     document.getElementById('photographer-link').innerText = photographer;
     document.getElementById('photographer-link').setAttribute('href', "mailto:" + contact_email);
+
+    document.getElementById('album-selection').childNodes[0].nodeValue = (album == "None"? "Album" : album);
 
     modal_image.setAttribute('src', image);
 

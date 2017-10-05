@@ -246,6 +246,7 @@
                         item_image.setAttribute('photographer', response[i]['photographer']['name']);
                         item_image.setAttribute('contactemail', response[i]['photographer']['email']);
                         item_image.setAttribute('tags', response[i]['tags']);
+                        item_image.setAttribute('album', response[i]['album']);
                         item_image.setAttribute('onclick', 'showImageModal(this)');
 
                         item_wrapper.appendChild(item_image);

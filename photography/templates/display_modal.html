@@ -4,6 +4,18 @@
             <div class="modal-header">
                 <button class="btn btn-clear float-right" onclick="hideModal('display-modal')"></button>
                 <div class="modal-title h5"><a href="" id="photographer-link"></a></div>
+                <div class="dropdown">
+                    <button id="album-selection" type="button" class="btn btn-primary dropdown-toggle">
+                        Album
+                        <i class="icon icon-caret"></i>
+                    </button>
+                    <ul class="menu">
+                        {% for album in Albums %}
+                        <li class="menu-item" onclick="changeAlbum(this)">{{album}}</li>
+                        {% endfor %}
+                    </ul>
+                    {% csrf_token %}
+                </div>
             </div>
             <img id="modal-image" src="" style="height:100%;width:auto;">
         </div>

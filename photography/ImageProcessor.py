@@ -24,7 +24,6 @@ class ImageProcessor:
                 full_path = path.join(settings.MEDIA_ROOT, temp_name+ "-High.jpg")
         full_path = path.join(settings.MEDIA_ROOT, temp_name)
         try:
-            print("TEST\n")
             self.img.save(full_path+"-High.jpg", quality=85, subsampling=-1)
             self.img.save(full_path+"-Medium.jpg", quality=55, subsampling=-1, optimize=True)
             self.img.save(full_path+"-Low.jpg", quality=25, optimize=True)
@@ -32,7 +31,8 @@ class ImageProcessor:
             #self.img.save(full_path+"-Medium.webp", quality=55)
             #self.img.save(full_path+"-Low.webp", quality=25)
             return {'status':'True', 'Filename':temp_name}
-        except:
+        except Exception as e:
+            print(e)
             for i in listdir(settings.MEDIA_ROOT):
                 if path.isfile(path.join(settings.MEDIA_ROOT, i)) and full_path in i:
                     remove(path.join(settings.MEDIA_ROOT, i))

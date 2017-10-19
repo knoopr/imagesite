@@ -29,7 +29,7 @@ except ImportError:
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 try:
     file = open('/imagesite/Credentials').read() # pylint: disable=invalid-name
@@ -136,7 +136,7 @@ USE_TZ = True
 
 
 # User upload media files (photos of users)
-MEDIA_ROOT = './media/'
+MEDIA_ROOT = '/imagesite/media/'
 MEDIA_URL = '/media/'
 
 # Static files (CSS, JavaScript, Images)

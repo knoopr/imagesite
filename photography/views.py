@@ -5,6 +5,7 @@ from photography.ImageProcessor import ImageProcessor
 from django.db import IntegrityError
 import photography.models as models
 import json
+import urllib.parse
 from random import choice
 
 
@@ -13,9 +14,10 @@ def index(request):
     if request.method == 'GET':
         template = get_template('index.html')
         #pictures = models.Photograph.
-        albums = models.Album.objects.all()
+        albums = models.Album.objects.all().order_by('id')
         people = models.Photographer.objects.all()
-        html = template.render( context={'Photographers':people, 'Albums':albums}, request = request)
+        random_image = choice(models.Photograph.objects.all())
+        html = template.render( context={'Photographers':people, 'Albums':albums, 'random_image':random_image}, request = request)
         return HttpResponse(html)
 
     if request.method == 'POST':
@@ -28,6 +30,11 @@ def index(request):
             upload_image = json_data['data']['image']
             upload_photographer = json_data['data']['photographer']
             upload_tags = json_data['data']['tags']
+
+            request_album = list(filter(None,request.META.get('HTTP_REFERER').split('/')))
+            request_album = urllib.parse.unquote(request_album[len(request_album)-1])
+            upload_album = models.Album.objects.get(album_name=request_album)
+
 
 
             new_person = None
@@ -46,18 +53,19 @@ def index(request):
                     new_person.save()
                 else:
                     new_person = new_person[0]
-            
-            
 
             temp = ImageProcessor(upload_image[upload_image.find(',')+1:])
             processor_return = temp.save_image()
+            print(processor_return['Filename'])
 
             new_photo = None
             if new_person != None:
                 new_photo = models.Photograph(image_data=processor_return['Filename'], image_photographer=new_person)
+                new_photo.image_album = upload_album
                 new_photo.save()
             else:
                 new_photo = models.Photograph(image_data=processor_return['Filename'])
+                new_photo.image_album = upload_album
                 new_photo.save()
 
 
@@ -70,7 +78,6 @@ def index(request):
                     pass
                 except: 
                     HttpResponse(status=500)
-
             return JsonResponse({'success':1, 'filename':upload_name})
     if request.method == 'PUT':
         json_data = json.loads(request.body)
@@ -93,9 +100,12 @@ def index(request):
             return HttpResponse(status=400)
 
 def album(request):
+    if request.method == 'POST':
+        print("WTF\n")
     if request.method == 'GET':
         request_album = list(filter(None,request.path.split('/')))
         request_album = request_album[len(request_album)-1]
+        print(request_album)
         if request_album == 'album':
             return redirect('/photography/')
 
@@ -165,7 +175,7 @@ def album(request):
                 except:
                     return HttpResponse(status=404)
                 
-                people = models.Photographer.objects.filter(associated_photographs__in = album.album_photographs.all())
+                people = models.Photographer.objects.filter(associated_photographs__in = album.album_photographs.all()).distinct()
                 albums = models.Album.objects.all()
                 html = template.render( context={'Photographers':people, 'Albums':albums}, request = request)
                 return HttpResponse(html)

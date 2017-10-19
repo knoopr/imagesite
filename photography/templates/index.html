@@ -13,10 +13,10 @@
 
     <div class="container" id="albums">
         <div class="columns">
-            <div class="column col-3">
+            <!--<div class="column col-3">
                 <div class="card">
                     <div class="card-image">
-                        <img src="/media/{{random_Image.image_data}}-Low.jpg" class="img-responsive" />
+                        <img src="/media/{{random_image.image_data}}-Low.jpg" class="img-responsive" />
                     </div>
                     <div class="card-header">
                         <div class="card-title h5">All Images</div>
@@ -25,9 +25,9 @@
                         <a href="album/All/" class="btn btn-primary"><i>Load Album</i></a>
                     </div>
                 </div>
-            </div>
+            </div>-->
         {% for album in Albums %}  
-            {% if forloop.counter|divisibleby:"4" %}
+            {% if forloop.counter0|divisibleby:"4" %}
                 </div>
                 <div class="columns">
             {% endif %}
